@@ -1,6 +1,10 @@
-import './assets/main.css'
+import PrimeVue from 'primevue/config';
+import 'primevue/resources/themes/lara-dark-amber/theme.css';
+import 'primevue/resources/primevue.min.css';
+import App from './App.vue';
+import 'primeicons/primeicons.css';
+import { createApp } from 'vue';
 
-import { createApp } from 'vue'
-import App from './App.vue'
-
-createApp(App).mount('#app')
+const app = createApp(App);
+app.use(PrimeVue);
+app.mount('#app');
