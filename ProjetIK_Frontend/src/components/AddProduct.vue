@@ -1,92 +1,94 @@
 <template>
-  <div class="container">
-    <div class="input-container">
-      <label for="textInput">Product Name:</label>
-      <InputText v-model="value1" type="text" size="small" id="textInput" placeholder="Small" />
-    </div>
+    <div class ="add-product-page">
+        <form @submit.prevent="submit" class="card">
+          <h2>Add Product</h2>
 
-    <div class="input-container">
-      <label for="textArea">Product Description:</label>
-      <Textarea v-model="value" autoResize rows="5" cols="30" id="textArea" />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="name" v-model="form.name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea id="description" v-model="form.description" class="form-control"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="number" id="price" v-model="form.price" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="category_id" class="form-label">Category</label>
+                <select id="category_id" v-model="form.category_id" class="form-select" required>
+                    <option value="">Select a category</option>
+                    <option v-for="category in categories" :key="category.id" :value="category.id">
+                        {{ category.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="stock" class="form-label">Stock</label>
+                <input type="number" id="stock" v-model="form.stock" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="part_number" class="form-label">Part Number</label>
+                <input type="text" id="part_number" v-model="form.part_number" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
-
-    <div class="input-container">
-      <label for="numberInput">Product Price:</label>
-      <InputNumber v-model="value2" mode="currency" currency="TND" locale="Fr-fr" id="numberInput" />
-    </div>
-    <div class="input-container">
-      <label for="colorSelection">Color Selection:</label>
-      <MultiSelect
-        v-model="selectedColors"
-        :options="colorOptions"
-        optionLabel="label"
-        placeholder="Select colors"
-      />
-      <div class="selected-colors">
-        <div v-for="color in selectedColors" :key="color.value" class="color-square" :style="{ backgroundColor: color.value }"></div>
-      </div>
-    </div>
-    <div class="button-container">
-      <Button label="Add Product" @click="submitForm"/>
-    </div>
-  </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import InputText from 'primevue/inputtext';
-import Textarea from 'primevue/textarea';
-import InputNumber from 'primevue/inputnumber';
-import Button from 'primevue/button';
-import MultiSelect from 'primevue/multiselect';
-
-const value1 = ref('');
-const value = ref('');
-const value2 = ref(0);
-const selectedColors = ref([]);
-const colorOptions = [
-  { value: 'red', label: 'Red' },
-  { value: 'blue', label: 'Blue' },
-  { value: 'green', label: 'Green' },
-  { value: 'yellow', label: 'Yellow' },
-  { value: 'black', label: 'Black' },
-  { value: 'white', label: 'White' },
-  // Add more color options as needed
-];
-
-const submitForm = () => {
-  console.log('Form values:', {
-    textInput: value1,
-    textArea: value,
-    numberInput: value2,
-    colorSelection: selectedColors.value.map(color => color.label),
-  });
-};
-</script>
-
-
 <style scoped>
-.container {
+.add-product-page {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: 100vh; /* Adjust the height as needed */
+  align-items: center;
+  height: 100vh;
 }
 
-.input-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 15px;
+.card {
+  width: 400px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
   text-align: center;
 }
 
-label {
-  margin-bottom: 5px;
-}
-
-.button-container {
-  margin-top: 15px;
+.form-field {
+  margin-bottom: 20px;
 }
 </style>
+
+
+<script>
+import axios from 'axios';
+
+export default {
+    data() {
+        return {
+            form: {
+                name: '',
+                description: '',
+                price: '',
+                category_id: '',
+                stock: '',
+                part_number: '',
+            },
+            categories: [],
+        };
+    },
+    async created() {
+        const response = await axios.get('/api/categories');
+        this.categories = response.data;
+    },
+    methods: {
+        async submit() {
+            try {
+                const response = await axios.post('/api/products', this.form);
+                this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product added', life: 3000});
+                this.$router.push('/');
+            } catch (error) {
+                this.$toast.add({severity:'error', summary: 'Error', detail: 'Product not added', life: 3000});
+            }
+        },
+    },
+};
+</script>
