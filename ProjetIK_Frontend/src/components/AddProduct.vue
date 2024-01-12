@@ -4,43 +4,52 @@
           <h2>Add Product</h2>
           <div class="mb-3">
                 <label for="part_number" class="form-label">Part Number</label>
-                <input type="text" id="part_number" v-model="product.part_number" class="form-control">
+                <br>
+                <InputText type="text" id="part_number" v-model="product.part_number"/>
             </div>
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" id="name" v-model="product.name" class="form-control" required>
+                <br>
+                <InputText type="text" id="name" v-model="product.name" class="w-full" required/>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <textarea id="description" v-model="product.description" class="form-control"></textarea>
+                <br>
+                <TextArea id="description" v-model="product.description" />
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">Price</label>
-                <input type="number" id="price" v-model="product.price" class="form-control" required>
+                <br>
+                <InputNumber type="number" id="price" mode="currency" currency="TND" v-model="product.price" required/>
             </div>
             <div class="mb-3">
                 <label for="category_id" class="form-label">Category</label>
-                <select id="category_id" v-model="product.category_id" class="form-select" required>
-                    <option value="">Select a category</option>
-                    <option v-for="category in categories" :key="category.id" :value="category.id">
-                        {{ category.name }}
-                    </option>
-                </select>
+                <br>
+                <Dropdown
+                    v-model="product.category_id"
+                    :options="categories"
+                    optionLabel="name"
+                    optionValue="id"
+                    placeholder="Select Categories"
+                    class="w-full" />
             </div>
             <div class="mb-3">
-                <label for="marque_id" class="form-label">Manufacturer</label>
-                <select id="marque_id" v-model="product.marque_id" class="form-select" required>
-                    <option value="">Select a category</option>
-                    <option v-for="marque in marques" :key="marque.id" :value="marque.id">
-                        {{ marque.name }}
-                    </option>
-                </select>
+                <label class="form-label">Manufacturer</label>
+                <br>
+                <Dropdown
+                    v-model="product.marque_id"
+                    :options="marques"
+                    optionLabel="name"
+                    optionValue="id"
+                    placeholder="Select Manufacturers"
+                    class="w-full md:w-14rem" />
             </div>
             <div class="mb-3">
-                <label for="stock" class="form-label">Stock</label>
-                <input type="number" id="stock" v-model="product.stock" class="form-control" required>
+                <label for="stock" >Stock</label>
+                <br>
+                <InputNumber v-model="product.stock" inputId="stacked-buttons" showButtons />
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <Button type="submit" label="Submit"/>
         </form>
     </div>
 </template>
@@ -60,13 +69,15 @@
   text-align: center;
 }
 
-.form-field {
-  margin-bottom: 20px;
-}
 </style>
 
 
 <script setup>
+import InputNumber from 'primevue/inputnumber';
+import Dropdown from 'primevue/dropdown';
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import TextArea from 'primevue/textarea';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
@@ -75,9 +86,9 @@ onMounted(() => {
   getMarques();
 });
 
-const categories = ref([]);
-const marques = ref([]);
-const product = {
+const categories = ref();
+const marques = ref();
+const product = ref({
     name: "",
     description: "",
     price : "",
@@ -86,7 +97,7 @@ const product = {
     stock : "",
     part_number : "",
 
-};
+});
 
 const getMarques = () => {
   axios
@@ -115,7 +126,7 @@ const getCategories = () => {
 const addproduct = () => {
     console.log(product)
   axios
-    .post("http://localhost:8000/api/products", product)
+    .post("http://localhost:8000/api/products", product.value)
     .then((response) => {
       console.log(response);
       router.push("/home");
