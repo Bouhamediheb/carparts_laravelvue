@@ -9,7 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-
+use App\Http\Controllers\MarqueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +46,13 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+
+// Routes pour l'entité Marque
+Route::get('/marques', [MarqueController::class, 'index']);
+Route::get('/marques/{id}', [MarqueController::class, 'show']);
+Route::post('/marques', [MarqueController::class, 'store']);
+Route::put('/marques/{id}', [MarqueController::class, 'update']);
+Route::delete('/marques/{id}', [MarqueController::class, 'destroy']);
 
 // Routes pour l'entité Order
 Route::get('/orders', [OrderController::class, 'index']);

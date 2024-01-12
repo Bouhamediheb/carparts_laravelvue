@@ -26,6 +26,7 @@ class ProductController extends Controller
             'description' => 'string',
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
+            'marque_id' => 'required|exists:marques,id',
             'stock' => 'required|integer',
             'part_number' => 'string|max:255|unique:products',
         ]);
@@ -42,6 +43,7 @@ class ProductController extends Controller
             'description' => 'string',
             'price' => 'numeric',
             'category_id' => 'exists:categories,id',
+            'marque_id' => 'exists:marques,id',
             'stock' => 'integer',
             'part_number' => 'string|max:255|unique:products',
         ]);

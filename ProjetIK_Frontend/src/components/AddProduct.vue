@@ -2,7 +2,10 @@
     <div class ="add-product-page">
         <form @submit.prevent="addproduct" class="card">
           <h2>Add Product</h2>
-
+          <div class="mb-3">
+                <label for="part_number" class="form-label">Part Number</label>
+                <input type="text" id="part_number" v-model="product.part_number" class="form-control">
+            </div>
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
                 <input type="text" id="name" v-model="product.name" class="form-control" required>
@@ -25,12 +28,17 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="stock" class="form-label">Stock</label>
-                <input type="number" id="stock" v-model="product.stock" class="form-control" required>
+                <label for="marque_id" class="form-label">Manufacturer</label>
+                <select id="marque_id" v-model="product.marque_id" class="form-select" required>
+                    <option value="">Select a category</option>
+                    <option v-for="marque in marques" :key="marque.id" :value="marque.id">
+                        {{ marque.name }}
+                    </option>
+                </select>
             </div>
             <div class="mb-3">
-                <label for="part_number" class="form-label">Part Number</label>
-                <input type="text" id="part_number" v-model="product.part_number" class="form-control">
+                <label for="stock" class="form-label">Stock</label>
+                <input type="number" id="stock" v-model="product.stock" class="form-control" required>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -64,17 +72,32 @@ import { onMounted, ref } from 'vue';
 
 onMounted(() => {
   getCategories();
+  getMarques();
 });
 
 const categories = ref([]);
-
+const marques = ref([]);
 const product = {
     name: "",
     description: "",
     price : "",
     category_id : "",
+    marque_id : "",
     stock : "",
     part_number : "",
+
+};
+
+const getMarques = () => {
+  axios
+    .get("http://localhost:8000/api/marques")
+    .then((res) => {
+      marques.value = res.data;
+    })
+
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 const getCategories = () => {

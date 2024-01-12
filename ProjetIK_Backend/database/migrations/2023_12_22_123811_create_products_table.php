@@ -19,9 +19,11 @@ return new class extends Migration
             $table->float('price');
             $table->integer('stock');
             $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('marque_id');
             $table->foreign('category_id')
                   ->references('id')
                   ->on('categories');
+            $table->foreign('marque_id')->references('id')->on('marques');
             $table->timestamps();
         });
     }
