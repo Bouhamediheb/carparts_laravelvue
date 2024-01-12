@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Laravel\Passport\HasApiTokens;
 class LoginController extends Controller
 {
-    use HasApiTokens,HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 public function login(Request $request)
 {
 $request->validate([
