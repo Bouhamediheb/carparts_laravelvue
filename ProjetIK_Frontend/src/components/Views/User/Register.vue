@@ -68,7 +68,7 @@ const register = () => {
     .post("http://localhost:8000/api/register", user)
     .then((response) => {
       console.log(response);
-      router.push("/");
+      router.push("/home");
     })
     .catch((error) => {
       console.log(error);

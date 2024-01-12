@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         submit() {
-            axios.post('http://localhost:8000/api/categories', this.form)
+            axios.get('http://localhost:8000/api/categories', this.form)
                 .then(() => {
                     this.$router.push({ name: 'Categories' });
                 });
