@@ -4,11 +4,13 @@ import 'primevue/resources/themes/lara-dark-amber/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import 'bootstrap/dist/css/bootstrap.css';
-
+import ToastService from 'primevue/toastservice';
 import App from './App.vue';
 import router from './router/router.js';
 
 const app = createApp(App);
 app.use(PrimeVue);
 app.use(router);
+app.use(ToastService);
+
 app.mount('#app');
