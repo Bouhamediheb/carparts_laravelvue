@@ -1,14 +1,15 @@
 <template>
     <div class ="add-category-page">
-        <form @submit.prevent="submit" class="card">
+        <form @submit.prevent="addcategory" class="card">
           <h2>Add Category</h2>
 
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" id="name" v-model="form.name" class="form-control" required>
+                <br>
+                <InputText type="text" v-model="category.name" required/>
             </div>
             
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <Button type="submit" label="Submit"/>
         </form>
     </div>
 </template>
@@ -34,25 +35,24 @@
 </style>
 
 
-<script>
+<script setup>
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
 import axios from 'axios';
 
-export default {
-    data() {
-        return {
-            form: {
-                name: '',  
-            },
-        };
-    },
-    methods: {
-        submit() {
-            axios.get('http://localhost:8000/api/categories', this.form)
-                .then(() => {
-                    this.$router.push({ name: 'Categories' });
-                });
-        },
-    },
-    
+const category = {
+    name: "",
 };
+
+const addcategory = () => {
+    axios
+    .post("http://localhost:8000/api/categories", category)
+    .then((response) => {
+      console.log(response);
+      router.push("/home");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 </script>

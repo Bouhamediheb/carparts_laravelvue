@@ -1,6 +1,6 @@
 <template>
     <div class="banner">
-      <div class="banner-content">
+      <div class="banner-content p-shadow-3">
         <h1>Welcome to Our Product List</h1>
         <p>Discover a wide range of products from various manufacturers and categories.</p>
       </div>
@@ -10,21 +10,22 @@
   <style scoped>
   .banner {
     width: 100%;
-    background-image: url('@/assets/banner-background.jpg'); /* Add your image path */
+    background-image: url('/Users/ihebbouhamed/Desktop/ProjetLaravelVue/carparts_laravelvue/ProjetIK_Frontend/src/assets/sports-car-driving-asphalt-road-night-generative-ai_188544-8052.jpg.avif'); /* Add your image path */
     background-size: cover;
-    background-position: center;
+    background-position:initial;
     background-repeat: no-repeat;
-    color: #fff;
     text-align: center;
     padding: 20px;
     box-sizing: border-box;
-    opacity: 0.8; /* Adjust the opacity as needed */
+    height: auto;
+    opacity: 0.5;
+
   }
   
   .banner-content {
-    background-color: rgba(0, 0, 0, 0.5); /* Adjust the background color and opacity */
     padding: 20px;
     border-radius: 10px;
+    align-items: center;
   }
   </style>
   
