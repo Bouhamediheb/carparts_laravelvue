@@ -1,48 +1,45 @@
 <template>
-    <Card>
-      <template #title>
-        <h2>Products</h2>
-      </template>
-  
-      <template #content>
-        <div class="p-grid">
-          <div class="p-col-12 p-md-6 p-lg-4" v-for="product in products" :key="product.id">
-            <Card>
-              <template #title>
-                <h3>{{ product.name }}</h3>
-              </template>
-  
-              <template #content>
-                <p>{{ product.description }}</p>
-                <p>{{ product.price }}</p>
-                <p>{{ product.category_id }}</p>
-                <p>{{ product.marque_id }}</p>
-                <p>{{ product.stock }}</p>
-                <p>{{ product.part_number }}</p>
-              </template>
+  <div class="product-list">
+    <div class="product-row" v-for="(product) in products" :key="product.id">
+      <Card class="product-card" style="width: 350px; height: 500px; border-radius: 5%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <template v-slot:title>
+          <img src="../../../assets/sports-car-driving-asphalt-road-night-generative-ai_188544-8052.jpg.avif" alt="Product Image" style="width: 100%; height: 150px; object-fit: cover;">
+          <hr style="border-top: 1px solid #ddd; margin: 10px 0;">
+          <h3>{{ product.name }}</h3>
+        </template>
+        <template v-slot:content>
+          <div class="ellipsis" style="height: 120px;">{{ product.description }}</div>
+          <p>Price: {{ product.price }}</p>
+        </template>
+        <template v-slot:footer>
+          <Button label="Add To Cart" />
+        </template>
+      </Card>
+    </div>
+  </div>
+</template>
 
-                <template #footer>
-                    <Button type="button" icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2" />
-                    <Button type="button" icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2" />
-                    <Button type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger" />
-                </template>
-            </Card>
-          </div>
-        </div>
-      </template>
+<style scoped>
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+}
 
-    </Card>
-    </template>
+.product-row {
+  flex: 0 0 calc(33.333% - 100px); /* Adjust the width and margin as needed */
+  margin: 10px;
+}
 
+.product-card {
+  overflow: hidden;
+}
 
-  
-  <style scoped>
-
-
-
-
-
-
+.ellipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>
 
   
@@ -59,16 +56,16 @@
   onMounted(() => {
     fetchProducts();
   });
-  
   const fetchProducts = () => {
-    axios
-      .get('http://localhost:8000/api/products')
-      .then((response) => {
-        products.value = response.data;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  axios
+    .get('http://localhost:8000/api/products')
+    .then((response) => {
+      products.value = response.data;
+      console.log(products.value); // Log the products array
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
   </script>
   
