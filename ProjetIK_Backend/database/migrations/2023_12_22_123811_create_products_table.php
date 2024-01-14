@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('part_number')->unique();
             $table->float('price');
             $table->integer('stock');
+            $table->string('image')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('marque_id');
             $table->foreign('category_id')

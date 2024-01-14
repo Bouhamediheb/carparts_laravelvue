@@ -12,7 +12,7 @@
           <p>Price: {{ product.price }}</p>
         </template>
         <template v-slot:footer>
-          <Button label="Add To Cart" />
+          <Button label="Add To Cart" @click="addToCart(product)"/>
         </template>
       </Card>
     </div>
@@ -46,6 +46,7 @@
   <script setup>
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
+  import store from '../../../store';
   import Card from 'primevue/card';
   import 'primeicons/primeicons.css'
     import Button from 'primevue/button';
@@ -67,5 +68,13 @@
       console.error(error);
     });
 };
+
+
+const addToCart = (prod) => {
+    store.commit("Articlestore/addCart", { product: prod, qty: 1 });
+
+}
+
+
   </script>
   

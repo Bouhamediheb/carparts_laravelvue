@@ -1,6 +1,6 @@
 <template>
   <div class="add-manufacturer-page">
-    <form @submit.prevent="addManufacturer" class="card">
+    <form @submit.prevent="addManufacturer" class="card" enctype="multipart/form-data">
       <h2>Add Manufacturer</h2>
 
       <div class="mb-3">
@@ -10,7 +10,7 @@
 
       <div class="mb-3">
         <label for="image" class="form-label">Manufacturer Image</label>
-        <FileUpload id="image" @change="handleImageUpload" class="form-control" accept="image/*" required></FileUpload>
+        <input type="file" id="image" @change="handleImageUpload" class="form-control" />
       </div>
 
       <Button type="submit" label="Submit" />
@@ -49,17 +49,26 @@ onMounted(() => {
   
 });
 
-const manufacturer = {
-  name: "",
+const manufacturer = ref({
   image: null,
+  name: "",
+});
+
+const handleImageUpload = async (event) => {
+  const selectedFile = event.target.files[0];
+  manufacturer.value.image = selectedFile;
 };
 
 const addManufacturer = () => {
   const formData = new FormData();
-  formData.append("name", manufacturer.name);
-  formData.append("image", manufacturer.image);
-
-  axios.post("http://localhost:8000/api/marques", formData)
+  formData.append("name", manufacturer.value.name);
+  formData.append("image", manufacturer.value.image);
+  console.log(manufacturer.value);
+  axios.post("http://localhost:8000/api/marques", manufacturer.value , {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     .then((response) => {
       console.log(response);
       // Handle success or redirection if needed
@@ -70,7 +79,5 @@ const addManufacturer = () => {
     });
 };
 
-const handleImageUpload = (event) => {
-  manufacturer.image = event.target.files[0];
-};
+
 </script>

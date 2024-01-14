@@ -19,6 +19,24 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
+    public function getImageurl($id)
+    {
+        // Retrieve the Product by ID
+        $product = Product::find($id);
+
+        // Check if the Product exists
+        if ($product) {
+            // Assuming you have an 'image' column in your Product model
+            $imagePath = $product->image;
+
+            // Return the image path
+            return response()->json($imagePath);
+        }
+
+        // Return a default image
+        return response()->json('images/default.png');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -29,9 +47,27 @@ class ProductController extends Controller
             'marque_id' => 'required|exists:marques,id',
             'stock' => 'required|integer',
             'part_number' => 'string|max:255|unique:products',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
-        $product = Product::create($request->all());
+        $product = new Product;
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->category_id = $request->input('category_id');
+        $product->marque_id = $request->input('marque_id');
+        $product->stock = $request->input('stock');
+        $product->part_number = $request->input('part_number');
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $filename);
+            $product->image = $filename;
+        }
+
+        $product->save();
+
 
         return response()->json($product, 201);
     }
@@ -46,10 +82,20 @@ class ProductController extends Controller
             'marque_id' => 'exists:marques,id',
             'stock' => 'integer',
             'part_number' => 'string|max:255|unique:products',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         $product = Product::findOrFail($id);
-        $product->update($request->all());
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->category_id = $request->input('category_id');
+        $product->marque_id = $request->input('marque_id');
+        $product->stock = $request->input('stock');
+        $product->part_number = $request->input('part_number');
+
+
+        $product->update();
 
         return response()->json($product, 200);
     }

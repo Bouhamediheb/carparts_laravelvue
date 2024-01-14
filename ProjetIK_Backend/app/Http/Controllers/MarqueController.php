@@ -23,9 +23,18 @@ class MarqueController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:marques',
-            'image'
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
-        $marque = Marque::create($request->all());
+
+        $image = request()->file('image');
+        $imageName = time().'.'.$image->extension();
+        $image->move(public_path('images'), $imageName);
+
+        $marque = new Marque;
+        $marque->name = $request->input('name');
+        $marque->image = $imageName;
+
+        $marque->save();
 
         return response()->json($marque, 201);
     }
@@ -37,6 +46,26 @@ class MarqueController extends Controller
     {
         $marque = Marque::findOrFail($id);
         return response()->json($marque);
+    }
+
+    public function getImageUrl($id)
+    {
+        // Retrieve the Marque by ID
+        $marque = Marque::find($id);
+
+        // Check if the Marque exists
+        if ($marque) {
+            // Assuming you have an 'image' column in your Marque model
+            $imagePath = $marque->image;
+
+            // Assuming your images are stored in the public/images folder
+            $imageUrl = asset("images/{$imagePath}");
+
+            return $imageUrl;
+        }
+
+        // Return a default image URL or handle the case when Marque is not found
+        return asset("images/default.png");
     }
 
     /**

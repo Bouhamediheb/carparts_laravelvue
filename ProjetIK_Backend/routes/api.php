@@ -43,6 +43,7 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 // Routes pour l'entité Product
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
+Route::get('/products/image/{id}', [ProductController::class, 'getImageurl']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
@@ -50,6 +51,7 @@ Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 // Routes pour l'entité Marque
 Route::get('/marques', [MarqueController::class, 'index']);
 Route::get('/marques/{id}', [MarqueController::class, 'show']);
+Route::get('/marques/image/{id}', [MarqueController::class, 'getImageUrl']);
 Route::post('/marques', [MarqueController::class, 'store']);
 Route::put('/marques/{id}', [MarqueController::class, 'update']);
 Route::delete('/marques/{id}', [MarqueController::class, 'destroy']);
