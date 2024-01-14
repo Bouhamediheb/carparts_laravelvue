@@ -44,7 +44,7 @@
         
       </div>
       <div class="text-center">
-        <Button type="submit" label="Sign Up" />
+        <Button type="submit" label="Sign Up"  @click="handleSubmit"></Button>
       </div>
     </form>
   </div>

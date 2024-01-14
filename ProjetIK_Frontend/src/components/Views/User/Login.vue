@@ -31,7 +31,7 @@
           
         </div>
         <div class="text-center">
-          <Button type="submit" label="Sign In" />
+          <Button type="submit" label="Sign In"  @click="handleLogin"/>
         </div>
       </form>
     </div>
@@ -42,6 +42,10 @@
   import InputText from "primevue/inputtext";
   import Button from "primevue/button";
   import axios from "axios";
+  //import router
+  import { useRouter } from 'vue-router';
+  const router = useRouter();
+  
   
   const user = {
     name: "",
@@ -50,17 +54,15 @@
   };
   
 
-  const login = () => {
-  console.log(user);
-  axios
-    .post("http://localhost:8000/api/login", user)
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error);
-
-    });
+  const handleLogin=async()=> {
+axios.post('http://localhost:8000/api/login/', user  )
+.then((response) => {
+  console.log(response.data);
+  localStorage.setItem('token', response.data.token);
+  localStorage.setItem('user', JSON.stringify(response.data.user));
+  router.push({ name: 'ShowAllProduct' });
+})
+    
   }
 
   </script>

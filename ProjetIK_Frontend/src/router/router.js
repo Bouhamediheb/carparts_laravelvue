@@ -10,15 +10,15 @@ import HomeCart from '../components/Views/cart/HomeCart.vue';
 import Cart from  '../components/Views/cart/Cart.vue';
 import Paiement from '../components/Views/cart/Paiement.vue';
 const routes = [
-  { path: '/addproduct', component: AddProduct },
-  { path: '/register', component: Register },
-  { path: '/login', component: Login },
-  { path: '/addcategory', component: AddCategory },
-  { path: '/addmanufact', component: AddManufact },
-  { path: '/listproduct', component: ShowAllProduct },
-  { path: '/homecart', component: HomeCart },
-  { path: '/cart', component: Cart },
-  { path: '/paiement', component: Paiement , name:'Paiement'},
+  { path: '/addproduct', component: AddProduct  , name:'AddProduct',meta:{isAuth:true}},
+  { path: '/register', component: Register , name:'Register',meta:{isAuth:false}},
+  { path: '/login', component: Login , name:'Login',},
+  { path: '/addcategory', component: AddCategory, name:'AddCategory',meta:{isAuth:true} },
+  { path: '/addmanufact', component: AddManufact, name:'AddManufact',meta:{isAuth:true} },
+  { path: '/listproduct', component: ShowAllProduct, name:'ShowAllProduct',meta:{isAuth:true} },
+  { path: '/homecart', component: HomeCart , name:'HomeCart',meta:{isAuth:true}},
+  { path: '/cart', component: Cart, name:'Cart' , meta:{isAuth:true}},
+  { path: '/paiement', component: Paiement , name:'Paiement',meta:{isAuth:true}},
 ];
 
 const router = createRouter({
