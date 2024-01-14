@@ -1,24 +1,22 @@
 <template>
     <div class="card">
-        <DataTable :value="$state.store.Articlestore.cart" :paginator="true" :rows="5" :rowsPerPageOptions="[5,10,20]" :paginatorTemplate="paginatorLeftTemplate">
-            <Column field="name" header="Name"></Column>
-            <Column field="Description" header="Description"></Column>
-            <Column field="Price" header="Price"></Column>
-            <Column field="Stock" header="Stock"></Column>
-            <Column field="Rating" header="Rating"></Column>
-            <Column field="Category" header="Category"></Column>
-            <Column field="Actions" header="Actions">
-                <template #body="slotProps">
-                    <Button label="Add To Cart" @click="addToCart(slotProps.data)"/>
-                </template>
-            </Column>
-
-        </DataTable>
+      <DataTable :value="cart" :paginator="true" :rows="5" :rowsPerPageOptions="[5, 10, 20]" :paginatorTemplate="paginatorLeftTemplate">
+        <Column field="product.name" header="Name"></Column>
+        <Column field="qty" header="Quantity"></Column>
+        <Column field="product.price" header="Price"></Column>
+        <Column field="total" header="Total"></Column>
+        <Column field="Actions" header="Actions">
+          <template #body="slotProps">
+            <Button label="Remove" @click="removeFromCart(slotProps.data)"/>
+          </template>
+        </Column>
+      </DataTable>
+      <div>Total: {{ cartTotal }}</div>
+      <Button label="Checkout" @click="checkout"/>
     </div>
-</template>
+  </template>
 <script setup>
 import axios from "axios";
-import store from '../../../store';
 import { ref, onMounted } from 'vue';
 import Card from 'primevue/card';
 import 'primeicons/primeicons.css'
@@ -28,6 +26,8 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Rating from 'primevue/rating';
 import Tag from 'primevue/tag';
+import store from '../../../store';
+
 
 const Articles = ref([]);
 const isLoading=ref(true)
@@ -36,22 +36,23 @@ const columns = [
     { field: 'Name', header: 'Name' },
     { field: 'Description', header: 'Description' },
     { field: 'Price', header: 'Price' },
-    { field: 'Stock', header: 'Stock' },
-    { field: 'Rating', header: 'Rating' },
     { field: 'Category', header: 'Category' },
-    { field: 'Actions', header: 'Actions' }
     
 ];
 
 
 const Produits = ref([]);
+const cart = ref([]);
+const cartTotal = ref(0);
+
 onMounted(() => {
-
+    cart.value = store.state.Articlestore.cart;
+    cart.value.forEach(item => {
+        console.log('Product Name:', item.product.name, 'Quantity:', item.qty, 'Total:', item.product.price * item.qty);
+    });
+    cartTotal.value = store.state.Articlestore.cartTotal;
     getProduits();
-   
-}
-
-);
+});
 
 
 
