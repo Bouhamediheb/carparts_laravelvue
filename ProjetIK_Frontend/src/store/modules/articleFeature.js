@@ -28,6 +28,14 @@ const mutations = ({
             
 
         }
+        else if (productInCartIndex >= 0) {
+            state.cart[productInCartIndex].qty++;
+            //calculating the total
+            state.cartTotal = state.cart.reduce((cartTotal, cartItem) => {
+                return parseFloat(cartTotal) +
+                    parseFloat(cartItem.product.price * cartItem.qty);
+            }, 0);
+        }
     },
     minusCart(state, payload) {
         //update quantity

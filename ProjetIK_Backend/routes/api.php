@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\MarqueController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,3 +75,9 @@ Route::delete('/order-items/{id}', [OrderItemController::class, 'destroy']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/register', [RegisterController::class, 'register']);
 Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
+
+//Route Stripe Paiement
+Route::middleware('api')->group(function($router) {
+    Route::post('/createpayment', [PaymentController::class,
+    'createPaymentIntent']);
+    });
