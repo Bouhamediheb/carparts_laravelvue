@@ -1,12 +1,40 @@
+<!-- App.vue -->
 <template>
-  <div>
-    <Header></Header>
-    <router-view />
-    <Footer></Footer>
+  <div id="app">
+    <Header :key="headerKey" />
+    <router-view :key="mainContentKey" />
+    <Footer />
   </div>
 </template>
 
-<script setup>
-import Footer from './components/Footer.vue';
+<script>
 import Header from './components/Header.vue';
+import Footer from './components/Footer.vue';
+
+export default {
+  components: {
+    Header,
+    Footer,
+  },
+  data() {
+    return {
+      headerKey: 0,
+      mainContentKey: 0,
+    };
+  },
+  watch: {
+    $route() {
+      this.headerKey += 1;
+      this.mainContentKey += 1;
+    },
+  },
+};
 </script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+  color: #2c3e50;
+}
+</style>

@@ -1,4 +1,9 @@
 <template>
+   <div class="centeredDiv">
+      <h2>You can add new categories here</h2>
+      <p>Categories are used to classify products.</p>
+    </div>
+    
     <div class ="add-category-page">
         <form @submit.prevent="addcategory" class="card">
           <h2>Add Category</h2>
@@ -12,6 +17,7 @@
             <Button type="submit" label="Submit"/>
         </form>
     </div>
+
 </template>
 
 <style scoped>
@@ -19,7 +25,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 50vh;
 }
 
 .card {
@@ -31,6 +37,10 @@
 
 .form-field {
   margin-bottom: 20px;
+}
+
+.centeredDiv {
+  text-align: center;
 }
 </style>
 

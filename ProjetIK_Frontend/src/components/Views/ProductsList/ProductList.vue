@@ -55,6 +55,8 @@
   const products = ref([]);
   
   onMounted(() => {
+    console.log(localStorage.getItem('name'));
+    console.log(localStorage.getItem('email'));
     fetchProducts();
   });
   const fetchProducts = () => {

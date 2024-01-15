@@ -9,7 +9,10 @@ import ShowAllProduct from '../components/Views/ProductsList/ShowAllProduct.vue'
 import HomeCart from '../components/Views/cart/HomeCart.vue';
 import Cart from  '../components/Views/cart/Cart.vue';
 import Paiement from '../components/Views/cart/Paiement.vue';
+import Home from '../components/Views/Home/Home.vue'
+import AdminDashboard from '../components/Views/Dashboard/AdminDashboard.vue'
 const routes = [
+  { path: '/', component: Home , name:'Home'},
   { path: '/addproduct', component: AddProduct  , name:'AddProduct',meta:{isAuth:true}},
   { path: '/register', component: Register , name:'Register',meta:{isAuth:false}},
   { path: '/login', component: Login , name:'Login',},
@@ -19,6 +22,8 @@ const routes = [
   { path: '/homecart', component: HomeCart , name:'HomeCart',meta:{isAuth:true}},
   { path: '/cart', component: Cart, name:'Cart' , meta:{isAuth:true}},
   { path: '/paiement', component: Paiement , name:'Paiement',meta:{isAuth:true}},
+  { path: '/admin', component: AdminDashboard , name:'AdminDashboard'},
+
 ];
 
 const router = createRouter({

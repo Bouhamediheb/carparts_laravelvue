@@ -1,36 +1,4 @@
 
-<script setup>
-import Menubar from 'primevue/menubar';
-import 'primevue/resources/themes/lara-light-green/theme.css';
-import Button from 'primevue/button';
-import Badge from 'primevue/badge';
-
-
-const items = [
-  { label: 'Home', icon: 'pi pi-fw pi-home' },
-  { label: 'Categories', icon: 'pi pi-fw pi-list' },
-  { label: 'Products', icon: 'pi pi-fw pi-tag' ,route: '/addproduct'},
-  { label: 'Cart', icon: 'pi pi-fw pi-shopping-cart', badge: 3 }, // Example with a badge
-  { label: 'Profile', icon: 'pi pi-fw pi-user' , },
-];
-
-const signIn = () => {
-  // Placeholder for sign-in logic
-  console.log('Sign In button clicked');
-};
-
-const signUp = () => {
-  // Placeholder for sign-up logic
-  console.log('Sign Up button clicked');
-};
-const navigateTo = (route) => {
-    // navigate to route
-    $router.push(route);
-
-
-};
-
-</script>
 <template>
   <Menubar :model="items">
     <template #start>
@@ -49,8 +17,8 @@ const navigateTo = (route) => {
       <Button
         v-ripple
         class="flex align-items-center p-button-text"
-        v-bind="props.action" @click="navigateTo(item.route)"
-        
+        v-bind="props.action"
+        @click="navigateTo(item.route)"
       >
         <span :class="item.icon" />
         <span class="ml-2">{{ item.label }}</span>
@@ -67,7 +35,10 @@ const navigateTo = (route) => {
         </span>
         <i
           v-if="hasSubmenu"
-          :class="['pi pi-angle-down text-primary', { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root }]"
+          :class="[
+            'pi pi-angle-down text-primary',
+            { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root },
+          ]"
         ></i>
       </Button>
     </template>
@@ -76,10 +47,98 @@ const navigateTo = (route) => {
         <InputText placeholder="Search" type="text" class="w-8rem sm:w-auto" />
         <Avatar image="/images/avatar/amyelsner.png" shape="circle" />
         <!-- Sign In and Sign Up buttons with added spacing -->
-        <Button label="Sign In" class="p-button-text" @click="signIn" style="margin-right: 10px;" />
-        <Button label="Sign Up" class="p-button-text" @click="signUp" />
+        <div v-if="state.isLoggedIn === false">
+          <Button
+            label="Sign In"
+            class="p-button-text"
+            @click="signIn"
+            style="margin-right: 10px"
+          />
+          <Button label="Sign Up" class="p-button-text" @click="signUp" />
+        </div>
+        <div v-else>
+          <Button
+            label="Log Out"
+            class="p-button-text"
+            severity="danger"
+            @click="logout"
+          />
+        </div>
       </div>
     </template>
   </Menubar>
 </template>
 
+
+
+<script setup>
+import Menubar from "primevue/menubar";
+import "primevue/resources/themes/lara-light-green/theme.css";
+import Button from "primevue/button";
+import Badge from "primevue/badge";
+import axios from "axios";
+import { reactive , onMounted, ref, watch, watchEffect } from "vue";
+
+const state = reactive({
+  isLoggedIn: false,
+})
+
+watchEffect(() => {
+  if (state.isLoggedIn) {
+    state.isLoggedIn = localStorage.getItem("isLoggedIn");
+    console.log(state.isLoggedIn);
+  }
+});
+
+onMounted(() => {
+  // Check if localStorage is available before accessing its methods
+  if (typeof localStorage !== "undefined") {
+    state.isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn")) === true;
+  }
+});
+
+//import router
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const items = [
+  { label: "Home", icon: "pi pi-fw pi-home" },
+  { label: "Categories", icon: "pi pi-fw pi-list" },
+  { label: "Products", icon: "pi pi-fw pi-tag", route: "/addproduct" },
+  { label: "Cart", icon: "pi pi-fw pi-shopping-cart", badge: 3 }, // Example with a badge
+  { label: "Profile", icon: "pi pi-fw pi-user" },
+];
+
+const signIn = () => {
+  router.push({ name: "Login" });
+  console.log("Sign In button clicked");
+};
+
+const signUp = () => {
+  router.push({ name: "Register" });
+  console.log("Sign Up button clicked");
+};
+
+const logout = () => {
+  let token = localStorage.getItem("token");
+  axios
+    .post("http://localhost:8000/api/logout", null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(() => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("name");
+      localStorage.removeItem("email");
+      localStorage.setItem("isLoggedIn", false);
+      router.push({ name: "Login" });
+    });
+  console.log("Log Out button clicked");
+};
+
+const navigateTo = (route) => {
+  // navigate to route
+  $router.push(route);
+};
+</script>

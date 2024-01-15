@@ -1,4 +1,7 @@
 <template>
+  <div class="centeredDiv">
+      <h2>You can add new products here</h2>
+    </div>
   <div class="add-product-page">
     <form @submit.prevent="addproduct" class="card" enctype="multipart/form-data">
       <h2>Add Product</h2>
@@ -90,6 +93,10 @@
   width: 400px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  text-align: center;
+}
+
+.centeredDiv {
   text-align: center;
 }
 </style>
