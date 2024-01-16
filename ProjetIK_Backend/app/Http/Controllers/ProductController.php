@@ -100,6 +100,22 @@ class ProductController extends Controller
         return response()->json($product, 200);
     }
 
+    public function updateStock(Request $request, $id)
+    {
+        $request->validate([
+            'stock' => 'required|integer'
+        ]);
+
+        $product = Product::findOrFail($id);
+        $stock = $request->input('stock');
+        $stockAncien = $product->stock;
+        $product->stock = $stockAncien - $stock;
+
+        $product->update();
+
+        return response()->json($product, 200);
+    }
+
     public function destroy($id)
     {
         $product = Product::findOrFail($id);

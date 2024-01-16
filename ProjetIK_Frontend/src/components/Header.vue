@@ -16,7 +16,7 @@
     <template #item="{ item, props, hasSubmenu, root }">
       <Button
         v-ripple
-        class="flex align-items-center p-button-text"
+        class="flex align-items-center p-button-text "
         v-bind="props.action"
         @click="navigateTo(item.route)"
       >
@@ -44,8 +44,6 @@
     </template>
     <template #end>
       <div class="flex align-items-center gap-2 ml-auto">
-        <InputText placeholder="Search" type="text" class="w-8rem sm:w-auto" />
-        <Avatar image="/images/avatar/amyelsner.png" shape="circle" />
         <!-- Sign In and Sign Up buttons with added spacing -->
         <div v-if="state.isLoggedIn === false">
           <Button
@@ -77,11 +75,14 @@ import "primevue/resources/themes/lara-light-green/theme.css";
 import Button from "primevue/button";
 import Badge from "primevue/badge";
 import axios from "axios";
-import { reactive , onMounted, ref, watch, watchEffect } from "vue";
+import store from "../store";
+import { reactive, onMounted, ref, watch, watchEffect } from "vue";
 
 const state = reactive({
   isLoggedIn: false,
-})
+  
+});
+
 
 watchEffect(() => {
   if (state.isLoggedIn) {
@@ -89,6 +90,14 @@ watchEffect(() => {
     console.log(state.isLoggedIn);
   }
 });
+
+watch(() => store.state.Articlestore.cart.length, (newCartLength) => {
+  const cartIndex = items.value.findIndex((i) => i.label === 'Cart');
+  if (cartIndex !== -1) {
+    items.value[cartIndex].badge = `${newCartLength}`;
+  }
+});
+
 
 onMounted(() => {
   // Check if localStorage is available before accessing its methods
@@ -101,13 +110,18 @@ onMounted(() => {
 import { useRouter } from "vue-router";
 const router = useRouter();
 
-const items = [
-  { label: "Home", icon: "pi pi-fw pi-home" },
-  { label: "Categories", icon: "pi pi-fw pi-list" },
-  { label: "Products", icon: "pi pi-fw pi-tag", route: "/addproduct" },
-  { label: "Cart", icon: "pi pi-fw pi-shopping-cart", badge: 3 }, // Example with a badge
-  { label: "Profile", icon: "pi pi-fw pi-user" },
-];
+var items = ref([
+  { label: "Home", icon: "pi pi-fw pi-home", route: "/" },
+  { label: "Products", icon: "pi pi-fw pi-tag", route: "/listproduct" },
+  { label: "Dashboard" , icon: "pi pi-fw pi-chart-bar", route: "/admin", visible : localStorage.getItem("role") === "1"},
+  {
+    label: "Cart",
+    icon: "pi pi-fw pi-shopping-cart",
+    badge: `${store.state.Articlestore.cart.length}`,
+    route: "/cart",
+    visible : localStorage.getItem("isLoggedIn") === "true",
+  }, // Example with a badge
+]);
 
 const signIn = () => {
   router.push({ name: "Login" });
@@ -131,6 +145,8 @@ const logout = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("name");
       localStorage.removeItem("email");
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("role");
       localStorage.setItem("isLoggedIn", false);
       router.push({ name: "Login" });
     });
@@ -139,6 +155,6 @@ const logout = () => {
 
 const navigateTo = (route) => {
   // navigate to route
-  $router.push(route);
+  router.push(route);
 };
 </script>

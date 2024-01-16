@@ -14,16 +14,17 @@
             <span class="total">{{ slotProps.data.product.price * slotProps.data.qty }}</span>
           </template>
         </Column>
+        <Toast />
         <Column field="Actions" header="Actions">
           <template #body="slotProps">
-            <Button class="remove-button" label="Remove" @click="removeFromCart(slotProps.data)"/>
+            <Button severity="danger" label="Remove" @click="removeFromCart(slotProps.data)"/>
           </template>
         </Column>
       </DataTable>
       <div class="cart-summary">
         <div class="cart-total">Total: {{ cartTotal }}</div>
         <router-link :to="{name: 'Paiement'}" > 
-            <button class="btn btn-info"> CHECKOUT </button> 
+            <Button label="CHECKOUT" /> 
 </router-link>     
  </div>
     </div>
@@ -43,7 +44,10 @@ import Rating from 'primevue/rating';
 import Tag from 'primevue/tag';
 import store from '../../../store';
 import { useRouter } from 'vue-router';
+import { useToast } from "primevue/usetoast";
+
 const router = useRouter();
+const toast = useToast();
 
 
 
@@ -81,7 +85,10 @@ const clearCart = () => {
     store.commit("Articlestore/clearCart");
 }
 const removeFromCart = (item) => {
+    toast.add({ severity: 'error', summary: 'Panier', detail: `${item.product.part_number}` + ' Supprimé du Panier', life: 3000 });
     store.commit("Articlestore/removeFromCart", item);
+    cart.value = store.state.Articlestore.cart;
+    cartTotal.value = store.state.Articlestore.cartTotal;
 }
 const plus = (item) => {
     Produits.value.map((pro) => {

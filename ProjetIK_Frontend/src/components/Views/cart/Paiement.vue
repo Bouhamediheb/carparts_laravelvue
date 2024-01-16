@@ -6,16 +6,14 @@
                 <br />
                 <div class="card-text">
                     <div class="form-group">
-
-                        <input type="email" class="form-control" placeholder="email" v-model="email" />
-
+                        <InputText type="email" class="form-control" placeholder="Email" v-model="email" />
                     </div>
                     <br />
                 </div>
                 <div id="card-element"></div>
                 <br />
-                <button type="submit" class="btn btn-success">Procéder au
-                    payement</button>
+                <Button type="submit" class="btn btn-success" label ="Procéder au
+                    payement" />
             </div>
         </div>
     </form>
@@ -45,7 +43,59 @@ onMounted(async () => {
     //log api key
     console.log(stripe.value._apiKey);
 });
+
+const cartId = ref();
+
+const cart = ref({
+    total_amount : store.state.Articlestore.cartTotal,
+    user_id : localStorage.getItem('user_id'),
+    status : 0
+});
+
+const cartItems = ref({
+    quantity : 0,
+    unit_price : 0,
+    order_id : 0,
+    product_id : 0
+});
+
+const confirmOrder = async () => {
+    console.log(cart.value);
+    await axios.post('http://localhost:8000/api/orders', cart.value)
+    .then(response => {
+        console.log(response.data);
+        cartId.value = response.data.id;
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+        store.state.Articlestore.cart.forEach(item => {
+        cartItems.value.quantity = item.qty;
+        cartItems.value.unit_price = item.product.price;
+        cartItems.value.order_id = cartId.value;
+        cartItems.value.product_id = item.product.id;
+        console.log(cartItems.value);
+        axios.post('http://localhost:8000/api/order-items', cartItems.value)
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+        axios.post('http://localhost:8000/api/products/stock/' + `${cartItems.value.product_id}`, { stock :cartItems.value.quantity})
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    });
+};
+
+
 const handleSubmit = async () => {
+    confirmOrder();
     const { token, error } = await stripe.value.createToken(cardElement);
     if (error) {
         console.error(error);
@@ -68,10 +118,11 @@ const handleSubmit = async () => {
             //Vider le cart
             store.commit('Articlestore/clearCart')
             //Redirection
-            router.push('/cart')
+            router.push('/')
         } else {
             console.error(response.data.error);
         }
     }
+    
 };
 </script>

@@ -9,8 +9,9 @@ import ShowAllProduct from '../components/Views/ProductsList/ShowAllProduct.vue'
 import HomeCart from '../components/Views/cart/HomeCart.vue';
 import Cart from  '../components/Views/cart/Cart.vue';
 import Paiement from '../components/Views/cart/Paiement.vue';
-import Home from '../components/Views/Home/Home.vue'
-import AdminDashboard from '../components/Views/Dashboard/AdminDashboard.vue'
+import Home from '../components/Views/Home/Home.vue';
+import AdminDashboard from '../components/Views/Dashboard/AdminDashboard.vue';
+
 const routes = [
   { path: '/', component: Home , name:'Home'},
   { path: '/addproduct', component: AddProduct  , name:'AddProduct',meta:{isAuth:true}},

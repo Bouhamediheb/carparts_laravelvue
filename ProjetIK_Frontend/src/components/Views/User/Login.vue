@@ -58,12 +58,11 @@
 axios.post('http://localhost:8000/api/login/', user  )
 .then((response) => {
   localStorage.setItem('token', response.data.token);
+  localStorage.setItem('user_id', response.data.user.id )
   localStorage.setItem('name', response.data.user.name);
   localStorage.setItem('email', response.data.user.email);
+  localStorage.setItem('role', response.data.user.role)
   localStorage.setItem('isLoggedIn', true);
-  console.log(localStorage.getItem('token'));
-  console.log(localStorage.getItem('name'));
-  console.log(localStorage.getItem('email'));
 
   router.push({ name: 'ShowAllProduct' });
 })

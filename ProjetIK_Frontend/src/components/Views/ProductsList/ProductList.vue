@@ -3,7 +3,7 @@
     <div class="product-row" v-for="(product) in products" :key="product.id">
       <Card class="product-card" style="width: 350px; height: 500px; border-radius: 5%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <template v-slot:title>
-          <img src="../../../assets/sports-car-driving-asphalt-road-night-generative-ai_188544-8052.jpg.avif" alt="Product Image" style="width: 100%; height: 150px; object-fit: cover;">
+          <img :src="'http://localhost:8000/images/' +  product.image" alt="Product Image" style="width: 70%; height: 150px; object-fit: cover;">
           <hr style="border-top: 1px solid #ddd; margin: 10px 0;">
           <h3>{{ product.name }}</h3>
         </template>
@@ -12,6 +12,7 @@
           <p>Price: {{ product.price }}</p>
         </template>
         <template v-slot:footer>
+          <Toast />
           <Button label="Add To Cart" @click="addToCart(product)"/>
         </template>
       </Card>
@@ -49,7 +50,10 @@
   import store from '../../../store';
   import Card from 'primevue/card';
   import 'primeicons/primeicons.css'
-    import Button from 'primevue/button';
+  import Button from 'primevue/button';
+  import { useToast } from 'primevue/usetoast';
+
+  const toast = useToast();
 
   
   const products = ref([]);
@@ -74,7 +78,7 @@
 
 const addToCart = (prod) => {
     store.commit("Articlestore/addCart", { product: prod, qty: 1 });
-
+    toast.add({ severity: 'success', summary: 'Panier', detail:  `${prod.part_number}` + ' Ajouté au Panier', life: 3000 });
 }
 
 
