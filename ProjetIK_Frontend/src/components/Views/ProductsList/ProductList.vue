@@ -3,17 +3,23 @@
     <div class="product-row" v-for="(product) in products" :key="product.id">
       <Card class="product-card" style="width: 350px; height: 500px; border-radius: 5%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <template v-slot:title>
-          <img :src="'http://localhost:8000/images/' +  product.image" alt="Product Image" style="width: 70%; height: 150px; object-fit: cover;">
-          <hr style="border-top: 1px solid #ddd; margin: 10px 0;">
-          <h3>{{ product.name }}</h3>
+          <div class="card-title">
+            <img :src="'http://localhost:8000/images/' +  product.image" alt="Product Image" class="card-image">
+            <hr style="border-top: 1px solid #ddd; margin: 10px 0;">
+            <h3 class="card-name">{{ product.name }}</h3>
+          </div>
         </template>
         <template v-slot:content>
-          <div class="ellipsis" style="height: 120px;">{{ product.description }}</div>
-          <p>Price: {{ product.price }}</p>
+          <div class="card-content">
+            <div class="ellipsis card-description">{{ product.description }}</div>
+            <p class="card-price">Price: {{ product.price }}</p>
+          </div>
         </template>
         <template v-slot:footer>
-          <Toast />
-          <Button label="Add To Cart" @click="addToCart(product)"/>
+          <div class="card-footer">
+            <Toast />
+            <Button label="Add To Cart" @click="addToCart(product)" class="add-to-cart-button" />
+          </div>
         </template>
       </Card>
     </div>
@@ -24,22 +30,59 @@
 .product-list {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+  background-color: #f8f9fa; 
 }
-
 .product-row {
-  flex: 0 0 calc(33.333% - 100px); /* Adjust the width and margin as needed */
-  margin: 10px;
+  margin: 50px;
+  align-items: center;
 }
 
 .product-card {
   overflow: hidden;
 }
 
-.ellipsis {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
+.card-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-image {
+  width: 70%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.card-name {
+  margin: 10px 0;
+  height: 50px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100px;
+  margin: 10px;
+}
+
+.card-description {
+  height: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.card-price {
+  margin-top: 5px;
+}
+
+.card-footer {
+  
+  align-items: center;
+  padding: 10px;
 }
 </style>
 
@@ -98,7 +141,7 @@ const fetchProductsByMarque = (id) => {
 
 const addToCart = (prod) => {
     store.commit("Articlestore/addCart", { product: prod, qty: 1 });
-    toast.add({ severity: 'success', summary: 'Panier', detail:  `${prod.part_number}` + ' Ajouté au Panier', life: 3000 });
+    toast.add({ severity: 'success', summary: 'Panier', detail: 'Article : ' +`${prod.name}` +" "+`${prod.part_number}` + ' Ajouté au Panier', life: 3000 });
 }
 
 
