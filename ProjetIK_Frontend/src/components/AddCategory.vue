@@ -1,4 +1,5 @@
 <template>
+  <div>
    <div class="centeredDiv">
       <h2>You can add new categories here</h2>
       <p>Categories are used to classify products.</p>
@@ -13,10 +14,11 @@
                 <br>
                 <InputText type="text" v-model="category.name" required/>
             </div>
-            
+            <Toast />
             <Button type="submit" label="Submit"/>
         </form>
     </div>
+  </div>
 
 </template>
 
@@ -49,6 +51,11 @@
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const category = {
     name: "",
@@ -58,8 +65,16 @@ const addcategory = () => {
     axios
     .post("http://localhost:8000/api/categories", category)
     .then((response) => {
-      console.log(response);
-      router.push("/home");
+      if (category.name === "") {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Please fill all the fields' });
+      } else {
+        toast.add({ severity: 'success', summary: 'Success', detail: 'Category added successfully', life: 3000 });
+        //push to /admin
+        //location reload after 3000
+        setTimeout(() => {
+          location.reload();
+        }, 3000);
+      }
     })
     .catch((error) => {
       console.log(error);

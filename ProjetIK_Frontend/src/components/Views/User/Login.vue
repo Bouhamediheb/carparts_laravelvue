@@ -31,6 +31,8 @@
           
         </div>
         <div class="text-center">
+          <!-- toast-->
+          <Toast />
           <Button type="submit" label="Sign In"  @click="handleLogin"/>
         </div>
       </form>
@@ -64,7 +66,7 @@ axios.post('http://localhost:8000/api/login/', user  )
   localStorage.setItem('role', response.data.user.role)
   localStorage.setItem('isLoggedIn', true);
 
-  router.push({ name: 'ShowAllProduct' });
+  router.push({ name: 'Home' });
 })
     
   }

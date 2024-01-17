@@ -53,7 +53,7 @@
 .card-image {
   width: 70%;
   height: 150px;
-  object-fit: cover;
+  object-fit: fit;
 }
 
 .card-name {

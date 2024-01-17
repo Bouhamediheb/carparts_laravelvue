@@ -1,9 +1,10 @@
 <template>
+  <div>
   <div class="centeredDiv">
       <h2>You can add new products here</h2>
     </div>
   <div class="add-product-page">
-    <form @submit.prevent="addproduct" class="card" enctype="multipart/form-data">
+    <form @submit.prevent="handleSubmit" class="card" enctype="multipart/form-data">
       <h2>Add Product</h2>
       <div class="mb-3">
         <label for="part_number" class="form-label">Part Number</label>
@@ -73,12 +74,14 @@
         />
       </div>
       <div class="mb-3">
+        <Toast />
         <label for="image" class="form-label">Product Image</label>
         <input type="file" id="image" @change="handleImageUpload" class="form-control" />
       </div>
       <Button type="submit" label="Submit" />
     </form>
   </div>
+</div>
 </template>
 
 <style scoped>
@@ -110,6 +113,13 @@ import Button from "primevue/button";
 import TextArea from "primevue/textarea";
 import axios from "axios";
 import { onMounted, ref } from "vue";
+import { useRouter } from 'vue-router';
+const router = useRouter();
+import { useToast } from 'primevue/usetoast';
+
+
+
+const toast = useToast();
 
 onMounted(() => {
   getCategories();
@@ -183,10 +193,24 @@ const addproduct = () => {
     })
     .then((response) => {
       console.log(response);
-      router.push("/home");
+      if (product.value.name === "" || product.value.description === "" || product.value.price === "" || product.value.category_id === "" || product.value.marque_id === "" || product.value.stock === "" || product.value.part_number === "" || product.value.image === null) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Please fill all the fields' });
+      } else {
+        toast.add({ severity: 'success', summary: 'Success', detail: 'Product added successfully', life: 3000 });
+        
+        //location reload after 3000
+        setTimeout(() => {
+          location.reload();
+        }, 3000);
+        
+      }
+     
     })
     .catch((error) => {
       console.log(error);
     });
+};
+const handleSubmit = () => {
+  addproduct();
 };
 </script>

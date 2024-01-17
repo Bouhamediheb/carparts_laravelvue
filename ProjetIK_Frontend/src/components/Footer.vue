@@ -75,10 +75,9 @@
                 style="width: 60px; background-color: #7c4dff; height: 2px"
                 />
             
-              <!-- loop categories into <p>-->
-                <p v-for="category in categories" :key="category.id">
-                    <a href="#" class="text-dark">{{ category.name }}</a>
-                </p>
+                <p v-for="category in visibleCategories" :key="category.id">
+      <a href="#" class="text-dark">  {{ category.name }}</a>
+    </p>
 
             
           </div>
@@ -87,20 +86,18 @@
           <!-- Grid column -->
           <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
             <!-- Links -->
-            <h6 class="text-uppercase fw-bold">Useful links</h6>
+            <h6 class="text-uppercase fw-bold">Manufacturers</h6>
             <hr
                 class="mb-4 mt-0 d-inline-block mx-auto"
                 style="width: 60px; background-color: #7c4dff; height: 2px"
                 />
 
-            
-            <!-- if logged in show logout else show singup use isAuthenticated()-->
-            <p v-if="isAuthenticated" >
-                <a href="#" class="text-dark">Logout</a>
-            </p>
-            <p v-else>
-                <a href="#" class="text-dark">Sign Up</a>
-            </p>
+                <p v-for="marque in visibleMarques" :key="marque.id">
+      <a href="#" class="text-dark">  {{ marque.name }}</a>
+    </p>
+
+
+           
             
           </div>
           <!-- Grid column -->
@@ -115,7 +112,6 @@
                 />
             <p><i class="fas fa-home mr-3"></i> Sfax, TUNISIA</p>
             <p><i class="fas fa-envelope mr-3"></i> contact@KIgarage.tn</p>
-            <p><i class="fas fa-phone mr-3"></i> + 216 20202020</p>
           </div>
           <!-- Grid column -->
         </div>
@@ -137,44 +133,54 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-// get product categories names 
-
-//check if user is  logged or not 
-// if logged in show logout else show singup
-
-
+import { ref, onMounted, computed } from 'vue';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
-  console.log(token);
-  if (token) {
-    return true;
-  } else {
-    return false;
-  }
+  return token ? true : false;
 };
-
-onMounted(() => {
-  isAuthenticated();
-});
-
 
 export default {
-  data() {
+  setup() {
+    const categories = ref([]);
+    const visibleCategories = computed(() => categories.value.slice(0, 2));
+
+    const marques = ref([]);
+    const visibleMarques = computed(() => marques.value.slice(0, 2));
+
+    const fetchCategories = () => {
+      axios
+        .get('http://localhost:8000/api/categories')
+        .then((response) => {
+          categories.value = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    const fetchMarques = () => {
+      axios
+        .get('http://localhost:8000/api/marques')
+        .then((response) => {
+          marques.value = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    onMounted(() => {
+      fetchCategories();
+      fetchMarques();
+      isAuthenticated();
+    });
+
     return {
-      categories: [],
+      categories,
+      visibleMarques,
+      visibleCategories,
     };
   },
-  mounted() {
-    axios
-      .get('http://localhost:8000/api/categories')
-      .then((response) => {
-        this.categories = response.data;
-      })
-      .catch((error) => console.log(error));
-  },
 };
-
-
 </script>

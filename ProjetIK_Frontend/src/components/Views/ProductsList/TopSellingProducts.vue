@@ -4,6 +4,11 @@
       <div class="card-deck">
         <div v-for="product in topSellingProducts" :key="product.id" class="card">
           <div class="card-body">
+
+            <!-- div for image-->
+            <div class="card-image">
+              <img :src="'http://localhost:8000/images/' +  product.image" alt="Product Image" class="card-image">
+            </div>
             <h5 class="card-title">{{ product.name }}</h5>
             <p class="card-text">{{ product.description }}</p>
             <p class="card-text">Price: ${{ product.price }}</p>
@@ -25,6 +30,13 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+  }
+
+  .card-image {
+    width: 100%;
+    height: 150px;
+    /* adjust image to fit */
+    object-fit:contain;
   }
   
   .card {
@@ -55,7 +67,7 @@
     axios
       .get('http://localhost:8000/api/products')
       .then((response) => {
-        topSellingProducts.value = response.data.slice(0, 5); 
+        topSellingProducts.value = response.data.slice(0, 3); 
       })
       .catch((error) => {
         console.error(error);

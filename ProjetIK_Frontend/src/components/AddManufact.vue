@@ -12,7 +12,7 @@
         <label for="image" class="form-label">Manufacturer Image</label>
         <input type="file" id="image" @change="handleImageUpload" class="form-control" />
       </div>
-
+      <Toast />
       <Button type="submit" label="Submit" />
     </form>
   </div>
@@ -44,6 +44,13 @@ import { onMounted, ref } from 'vue';
 import InputText  from 'primevue/inputtext';
 import Button  from 'primevue/button';
 import FileUpload  from 'primevue/fileupload';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
+
+
 
 onMounted(() => {
   
@@ -70,8 +77,15 @@ const addManufacturer = () => {
       },
     })
     .then((response) => {
-      console.log(response);
-      // Handle success or redirection if needed
+      if (manufacturer.value.name === "" || manufacturer.value.image === null) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Please fill all the fields' });
+      } else {
+        toast.add({ severity: 'success', summary: 'Success', detail: 'Manufacturer added successfully', life: 3000 });
+       //location reload after 3000
+       setTimeout(() => {
+          location.reload();
+        }, 3000);
+      }
     })
     .catch((error) => {
       console.error(error);

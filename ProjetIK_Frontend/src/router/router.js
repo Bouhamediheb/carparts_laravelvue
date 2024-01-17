@@ -11,6 +11,7 @@ import Cart from  '../components/Views/cart/Cart.vue';
 import Paiement from '../components/Views/cart/Paiement.vue';
 import Home from '../components/Views/Home/Home.vue';
 import AdminDashboard from '../components/Views/Dashboard/AdminDashboard.vue';
+import WelcomeAdmin from '../components/Views/Dashboard/WelcomeAdmin.vue';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -58,15 +59,19 @@ const routes = [
   },
 },
   { path: '/paiement', component: Paiement , name:'Paiement'},
-  { path: '/admin', component: AdminDashboard , name:'AdminDashboard',
-  beforeEnter: (to, from, next) => {
-    if (isAdmin()) {
-      next();
-    } else {
-      next('/login');
-    }
+  { 
+    path: '/admin', 
+    component: AdminDashboard, 
+    name: 'AdminDashboard',
+    beforeEnter: (to, from, next) => {
+      console.log('BeforeEnter isAdmin:', isAdmin());
+      if (isAdmin()) {
+        next();
+      } else {
+        next('/login');
+      }
+    },
   },
-},
 
 ];
 
