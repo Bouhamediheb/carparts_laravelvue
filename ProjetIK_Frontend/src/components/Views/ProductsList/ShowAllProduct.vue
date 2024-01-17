@@ -4,17 +4,20 @@
     <Banner />
 
     <!-- Split Screen: Manufacturer and Product List -->
-    <div class="split-screen">
-      <div class="dropdown-section">
-        <ManufacturerDropdown />
+    <Card>
+      <template #title>
+        <div class="dropdown-section ">
+        <ManufacturerDropdown @manufacturer-selected = "handleManufacturerSelected"/>
       </div>
-      <div class="product-list-section">
-        <ProductList />
+    </template>
+    <template #content>
+        <div>
+        <ProductList :manufacturer="selectedManufacturer"/>
       </div>
-    </div>
-
+      </template>
+    </Card>
       <!-- Top Selling Products Component -->
-      <TopSellingProducts />  
+    <TopSellingProducts />  
     <!-- Newsletter Subscription Component -->
     <NewsletterSubscription />
   </div>
@@ -33,11 +36,11 @@
 }
 
 .dropdown-section {
-  flex: 3; /* Adjust to 30% of the parent .split-screen */
+  align-self: center; /* Adjust to 30% of the parent .split-screen */
 }
 
 .product-list-section {
-  flex: 7; /* Adjust to 70% of the parent .split-screen */
+   /* Adjust to 70% of the parent .split-screen */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 10px;
   text-align: center;
@@ -51,5 +54,13 @@ import ManufacturerDropdown from './ManufacturerDropdown.vue'; // Create a separ
 import ProductList from './ProductList.vue'; // Create a separate ProductList component
 import NewsletterSubscription from './NewsletterSubscription.vue'; // Create a separate NewsletterSubscription component
 import TopSellingProducts from './TopSellingProducts.vue';
+import {ref} from 'vue';
+
+const selectedManufacturer = ref();
+
+const handleManufacturerSelected = (manufacturer) => {
+  selectedManufacturer.value = manufacturer;
+  console.log(manufacturer);
+};
 
 </script>

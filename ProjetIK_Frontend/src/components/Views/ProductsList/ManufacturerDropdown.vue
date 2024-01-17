@@ -9,18 +9,7 @@
          optionLabel="name"
          optionValue="id"
          placeholder="Select a Manufacturer"
-       />
-     </div>
- 
-     <div class="p-field">
-       <label for="category">Category:</label>
-       <Dropdown
-         id="category"
-         v-model="selectedCategory"
-         :options="categories"
-         optionLabel="name"
-         optionValue="id"
-         placeholder="Select a Category"
+         @change="$emit('manufacturer-selected', selectedManufacturer)"
        />
      </div>
      
@@ -36,7 +25,7 @@
  import 'primevue/resources/primevue.min.css';
  import 'primeicons/primeicons.css';
  
- const selectedManufacturer = ref('');
+ const selectedManufacturer = ref();
  const selectedCategory = ref('');
  const manufacturers = ref([]);
  const categories = ref([]);

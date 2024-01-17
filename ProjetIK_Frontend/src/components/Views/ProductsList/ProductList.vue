@@ -45,7 +45,7 @@
 
   
   <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, watch } from 'vue';
   import axios from 'axios';
   import store from '../../../store';
   import Card from 'primevue/card';
@@ -53,6 +53,14 @@
   import Button from 'primevue/button';
   import { useToast } from 'primevue/usetoast';
 
+
+  
+  const props = defineProps(['manufacturer']);
+
+
+  watch(() => props.manufacturer, () => {
+    fetchProductsByMarque(props.manufacturer);
+  });
   const toast = useToast();
 
   
@@ -74,6 +82,18 @@
       console.error(error);
     });
 };
+
+const fetchProductsByMarque = (id) => {
+  axios
+    .get(`http://localhost:8000/api/products/`)
+    .then((response) => {
+      products.value = response.data.filter((product) => product.marque_id === id);
+      console.log(products.value); // Log the products array
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
 
 
 const addToCart = (prod) => {
