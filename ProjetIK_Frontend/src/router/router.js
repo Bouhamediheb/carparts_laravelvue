@@ -12,18 +12,61 @@ import Paiement from '../components/Views/cart/Paiement.vue';
 import Home from '../components/Views/Home/Home.vue';
 import AdminDashboard from '../components/Views/Dashboard/AdminDashboard.vue';
 
+const isAuthenticated = () => {
+  const token = localStorage.getItem('token');
+  console.log(token);
+  if (token) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const isAdmin = () => {
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
+  if (token && role == 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 const routes = [
   { path: '/', component: Home , name:'Home'},
-  { path: '/addproduct', component: AddProduct  , name:'AddProduct',meta:{isAuth:true}},
+  
   { path: '/register', component: Register , name:'Register',meta:{isAuth:false}},
   { path: '/login', component: Login , name:'Login',},
-  { path: '/addcategory', component: AddCategory, name:'AddCategory',meta:{isAuth:true} },
-  { path: '/addmanufact', component: AddManufact, name:'AddManufact',meta:{isAuth:true} },
-  { path: '/listproduct', component: ShowAllProduct, name:'ShowAllProduct',meta:{isAuth:true} },
-  { path: '/homecart', component: HomeCart , name:'HomeCart',meta:{isAuth:true}},
-  { path: '/cart', component: Cart, name:'Cart' , meta:{isAuth:true}},
-  { path: '/paiement', component: Paiement , name:'Paiement',meta:{isAuth:true}},
-  { path: '/admin', component: AdminDashboard , name:'AdminDashboard'},
+
+  { path: '/listproduct', component: ShowAllProduct, name:'ShowAllProduct'},
+  { path: '/homecart', component: HomeCart , name:'HomeCart',
+  beforeEnter: (to, from, next) => {
+    if (isAuthenticated()) {
+      next();
+    } else {
+      next('/login');
+    }
+  },
+},
+  { path: '/cart', component: Cart, name:'Cart' , 
+  beforeEnter: (to, from, next) => {
+    if (isAuthenticated()) {
+      next();
+    } else {
+      next('/login');
+    }
+  },
+},
+  { path: '/paiement', component: Paiement , name:'Paiement'},
+  { path: '/admin', component: AdminDashboard , name:'AdminDashboard',
+  beforeEnter: (to, from, next) => {
+    if (isAdmin()) {
+      next();
+    } else {
+      next('/login');
+    }
+  },
+},
 
 ];
 

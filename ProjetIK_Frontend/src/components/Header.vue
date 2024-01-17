@@ -148,7 +148,9 @@ const logout = () => {
       localStorage.removeItem("user_id");
       localStorage.removeItem("role");
       localStorage.setItem("isLoggedIn", false);
+      store.commit("Articlestore/clearCart");
       router.push({ name: "Login" });
+      
     });
   console.log("Log Out button clicked");
 };

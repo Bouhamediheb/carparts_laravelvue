@@ -29,13 +29,15 @@
   .newsletter-subscription {
     width: 100%;
     background-color: #f8f9fa;
-    padding: 20px;
+    padding: 50px;
     text-align: center;
+    height: 30vh;
   }
   
   .subscription-form {
     max-width: 400px;
     margin: 0 auto;
+    height: 30vh;
   }
   
   .p-field {
