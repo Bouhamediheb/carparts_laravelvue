@@ -1,17 +1,27 @@
 <template>
-    <div class="cart">
+    <div class="cart" v-if ="store.state.Articlestore.cart.length>0">
       <DataTable :value="cart" :paginator="true" :rows="5" :rowsPerPageOptions="[5, 10, 20]" :paginatorTemplate="paginatorLeftTemplate">
         <Column field="product.name" header="Name"></Column>
         <Column field="qty" header="Quantity"></Column>
         <Column field="product.price" header="Price"></Column>
+        <!-- Column manufact image from product -->
+        <Column field="product.marque_id" header="Marque">
+          <template >
+            <img :src="`${manufactImageSrc}`" alt="Manufact Image" style="max-width: 100px; max-height: 300px;" />
+          </template>
+        </Column>
+  
+        
+        
         <Column field="product.image" header="Image">
           <template #body="slotProps">
             <img :src="'http://localhost:8000/images/' + slotProps.data.product.image" alt="Product Image" style="max-width: 100px; max-height: 100px;" />
           </template>
         </Column>
+
         <Column header="Total">
           <template #body="slotProps">
-            <span class="total">{{ slotProps.data.product.price * slotProps.data.qty }}</span>
+            <span class="total">{{ slotProps.data.product.price * slotProps.data.qty }} TND</span>
           </template>
         </Column>
         <Toast />
@@ -22,18 +32,34 @@
         </Column>
       </DataTable>
       <div class="cart-summary">
-        <div class="cart-total">Total: {{ cartTotal }}</div>
-        <router-link :to="{name: 'Paiement'}" > 
-            <Button label="CHECKOUT" /> 
-</router-link>     
- </div>
+        <div class="cart-total">Total: {{ cartTotal }} TND</div>
+        <!-- if cartTotal = 0 do not show  router button to checkout -->
+            <div v-if="cartTotal > 0">
+              <router-link :to="{name: 'Paiement'}" > 
+                        <Button label="CHECKOUT" /> 
+            </router-link>  
+            </div>
+      </div>
     </div>
+    <div v-else class="mt-5 mb-5">
+      <h3>Your cart is empty</h3>
+
+      <router-link :to="{name: 'ShowAllProduct'}" > 
+                        <Button label="Back to Shopping" /> 
+            </router-link>  
+
+            <br>
+
+
+    </div>
+
   </template>
-  
+           
+
   
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,watch } from 'vue';
 import Card from 'primevue/card';
 import 'primeicons/primeicons.css'
 import Button from 'primevue/button';
@@ -60,8 +86,14 @@ const columns = [
     { field: 'Description', header: 'Description' },
     { field: 'Price', header: 'Price' },
     { field: 'Category', header: 'Category' },
+    { field: 'Manufacturer', header: 'Manufacturer' },
+    
     
 ];
+
+
+let manufactImageSrc = ref('');
+
 
 
 const Produits = ref([]);
@@ -77,6 +109,10 @@ onMounted(() => {
     cartTotal.value = store.state.Articlestore.cartTotal;
 
     getProduits();
+    loadImage();
+    manufactImageSrc.value = loadImage(manufactImageSrc);
+    console.log('Image URL: ', manufactImageSrc.value);
+
 });
 
 
@@ -132,6 +168,33 @@ const calculateTotal = (rowData) => {
   lineTotal.value = rowData.product.price * rowData.qty;
 };
 
+// get manufacturer image by using product attribut manufacturer_id
+
+const loadImage = async (product) => {
+  if (!product || typeof product.marque_id === 'undefined') {
+    return '';
+  }
+
+  const id = product.marque_id;
+  const apiUrl = `http://localhost:8000/api/marques/image/${id}`;
+
+  try {
+    const res = await axios.get(apiUrl);
+    const imagePath = res.data;
+    const imageUrl = imagePath;
+    console.log('Image URL: sdsd', imageUrl);
+    return imageUrl;
+  } catch (error) {
+    console.error('Error loading image:', error);
+    return ''; // Return an empty string or a default image URL on error
+  }
+};
+// use watchEffect to update manufactImageSrc
+watch(() => {
+  manufactImageSrc.value = loadImage(manufactImageSrc);
+});
+
+
 
 </script>
 
@@ -158,6 +221,8 @@ const calculateTotal = (rowData) => {
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+  align-items: flex-end;
+  margin-right:100px;
 }
 
 .cart-total {

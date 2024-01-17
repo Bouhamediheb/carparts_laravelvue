@@ -47,6 +47,9 @@
   //import router
   import { useRouter } from 'vue-router';
   const router = useRouter();
+  import { useToast } from 'primevue/usetoast';
+
+  const toast = useToast();
   
   
   const user = {
@@ -59,16 +62,38 @@
   const handleLogin=async()=> {
 axios.post('http://localhost:8000/api/login/', user  )
 .then((response) => {
+  
+  
   localStorage.setItem('token', response.data.token);
   localStorage.setItem('user_id', response.data.user.id )
   localStorage.setItem('name', response.data.user.name);
   localStorage.setItem('email', response.data.user.email);
   localStorage.setItem('role', response.data.user.role)
   localStorage.setItem('isLoggedIn', true);
+  toast.add({
+    severity: 'success',
+    summary: 'Success Message',
+    detail: 'Logged in successfully',
+    life: 3000,
+  });
+  setTimeout(() => {
+    router.push({ name: 'Home' });
+  }, 3000);
 
-  router.push({ name: 'Home' });
-})
+
+
     
+  }
+)
+.catch((error) => {
+  console.error(error);
+  toast.add({
+    severity: 'error',
+    summary: 'Error Message',
+    detail: 'Wrong email or password',
+    life: 3000,
+  });
+});
   }
 
   </script>
